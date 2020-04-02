@@ -1,0 +1,1 @@
+For this homework, I created a form that allows the user to input their name and a game that they play. The entries will be displayed and the total number of games that each user has played will be displayed in a bar graph on the screen.
