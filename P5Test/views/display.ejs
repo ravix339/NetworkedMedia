@@ -1,0 +1,30 @@
+<html>
+  <head>
+      <script src="p5.js"></script>
+ 
+
+  </head>
+  <body>
+    <h1>Game Data</h1>
+    <table>
+      <tr>
+        <th>Person</th>
+        <th>Game</th>
+      </tr>
+
+      <% for (var i = 0; i < data.length; i++) { %>
+
+
+        <tr>
+          <td><%=data[i].Person%></td>
+          <td><%=data[i].Game%></td>
+        </tr>
+
+      <% } %>
+
+      <a href="/form.html">Add Data</a>
+      
+    <script src="sketch.js"></script>
+
+  </body>
+</html>
