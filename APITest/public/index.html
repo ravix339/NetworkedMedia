@@ -1,0 +1,66 @@
+<html>
+
+<head>
+    <title>
+        Language Detector
+    </title>
+    <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#submit").click(function () {
+                let textToDetect = $('#text').val();
+                console.log(textToDetect);
+                $.ajax({
+                    url: "/search?text=" + textToDetect,
+                    dataType: 'json',
+                    success: function (data) {
+                        var listOfLanguages = data.detections;
+                        console.log(listOfLanguages);
+                        var toPrint = ""
+                        if (listOfLanguages.length == 1) {
+                            toPrint = "I believe the language is " + listOfLanguages[0].language + ".";
+                        }
+                        else {
+                            var maxConfidenceI = 0;
+                            var maxConfidence = listOfLanguages[0].confidence;
+                            for (var i = 0; i < listOfLanguages.length; i++) {
+                                if (listOfLanguages[i].confidence > maxConfidence) {
+                                    maxConfidence = listOfLanguages[i].confidence;
+                                    maxConfidenceI = i;
+                                }
+                            }
+
+                            var potential = [];
+
+                            for (var i = 0; i < listOfLanguages.length; i++) {
+                                if (maxConfidence - listOfLanguages[i].confidence < 1.0 && i != maxConfidenceI) {
+                                    potential.push(listOfLanguages[i].language);
+                                }
+                            }
+                            if (potential.length == 0) {
+                                toPrint = "I believe the language is " + listOfLanguages[maxConfidenceI].language + ".";
+                            } else {
+                                toPrint = "I have some ideas. My gut feeling is that it is " + listOfLanguages[maxConfidenceI].language + " but it could be ";
+                                toPrint += potential.join(', ') + ".";
+                            }
+                        }
+                        $("#result").html(toPrint);
+                    },
+                    error: function () { }
+                });
+            })
+        });
+    </script>
+</head>
+
+<body>
+    <h1>I will use my big brain to detect the language you're writing in</h1>
+    Enter your text <input type="text" id="text"> <input type="button" id="submit" value="Test me">
+    <br />
+    <p id="result"></p>
+    <footer>
+        Made using the <a href="https://detectlanguage.com/">DetectLanguage API</a>
+    </footer>
+</body>
+
+</html>
