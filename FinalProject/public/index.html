@@ -17,12 +17,12 @@
           processData: false,
           contentType: false,
           success: function (response) {
-            // var data = String.fromCharCode.apply(null, response.data);
-            // var b64 = btoa(data);
+            $('#err').html('');
             $('#out').attr('src', response.data);
           },
-          error: function (err) {
-            $('#id').html(err);
+          error: function (error) {
+            $('#err').html("Error: " + error.responseJSON.err);
+            $('#out').attr('src', '');
           }
         });
       });

@@ -22,10 +22,11 @@ app.post('/process', upload.any(), async function (req, res) {
                 var textData = memedown.validateAndSeparate(result);
                 if (textData.err) {
                     console.log(textData.err);
+                    res.status(400).send({err: textData.err});
                 }
                 else {
                     var result = memedown.drawCanvas(textData.data, imdata, size.width, size.height);
-                    res.send({ data: result.toDataURL() });
+                    res.status(200).send({ data: result.toDataURL() });
                 }
             });
         }
