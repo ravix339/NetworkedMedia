@@ -15,23 +15,32 @@ memedown.loadFonts();
 
 app.post('/process', upload.any(), async function (req, res) {
     var code = req.body.code;
+    if (req.files.length == 0) {
+        res.status(400).send({err: "No valid image attached."});
+        return;
+    }
     var imdata = req.files[0].buffer;
     gm(imdata).size(function (err, size) {
         if (!err) {
             parseString(code, function (err, result) {
-                var textData = memedown.validateAndSeparate(result);
-                if (textData.err) {
-                    console.log(textData.err);
-                    res.status(400).send({err: textData.err});
+                if (err) {
+                    res.status(400).send({err: "Malformed memedown code."});
                 }
-                else {
-                    var result = memedown.drawCanvas(textData.data, imdata, size.width, size.height);
-                    res.status(200).send({ data: result.toDataURL() });
+                else{
+                    var textData = memedown.validateAndSeparate(result);
+                    if (textData.err) {
+                        console.log(textData.err);
+                        res.status(400).send({err: textData.err});
+                    }
+                    else {
+                        var result = memedown.drawCanvas(textData.data, imdata, size.width, size.height);
+                        res.status(200).send({ data: result.toDataURL() });
+                    }
                 }
             });
         }
         else {
-            console.log(err);
+            res.status(400).send({err: "No valid image attached."});
         }
     });
 });
