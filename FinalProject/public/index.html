@@ -1,0 +1,41 @@
+<html>
+
+<head>
+  <title>Memedown</title>
+  <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+  <script type="text/javascript">
+    $(document).ready(function () {
+      $('#upload').on('click', function (evt) {
+        var postdata = new FormData();
+        console.log($('#img')[0]);
+        postdata.append('img', $('#img')[0].files[0]);
+        postdata.append('code', $('#code').val());
+        $.ajax({
+          type: 'post',
+          url: '/process',
+          data: postdata,
+          processData: false,
+          contentType: false,
+          success: function (response) {
+            // var data = String.fromCharCode.apply(null, response.data);
+            // var b64 = btoa(data);
+            $('#out').attr('src', response.data);
+          },
+          error: function (err) {
+            $('#id').html(err);
+          }
+        });
+      });
+    });
+  </script>
+</head>
+
+<body>
+  <input type="file" id="img"> <br />
+  <textarea id="code"></textarea><br />
+  <input type="submit" value="Submit!" id="upload">
+  <img id="out">
+  <p id="err"></p>
+</body>
+
+</html>
